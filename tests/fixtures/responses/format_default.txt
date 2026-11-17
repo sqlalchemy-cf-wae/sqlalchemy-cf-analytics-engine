@@ -1,2 +1,31 @@
-Authorization error
-HTTP 403
+{
+	"meta":
+	[
+		{
+			"name": "blob1",
+			"type": "String"
+		},
+		{
+			"name": "double1",
+			"type": "Float64"
+		}
+	],
+
+	"data":
+	[
+		{
+			"blob1": "GET",
+			"double1": 200
+		},
+		{
+			"blob1": "POST",
+			"double1": 201
+		}
+	],
+
+	"rows": 2,
+
+	"rows_before_limit_at_least": 0
+}
+
+HTTP 200
