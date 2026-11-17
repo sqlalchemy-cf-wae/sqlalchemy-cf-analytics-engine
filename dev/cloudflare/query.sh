@@ -2,7 +2,7 @@
 # Send one SQL query to the Workers Analytics Engine SQL API and print the
 # raw reply. Reads CFWAE_ACCOUNT_ID and CFWAE_API_TOKEN from dev/cloudflare/.env.
 #
-#   ./query.sh "SELECT count() FROM cfwae_demo FORMAT JSON"
+#   ./query.sh "SELECT count() FROM api_requests FORMAT JSON"
 set -euo pipefail
 
 cd "$(dirname "$0")"

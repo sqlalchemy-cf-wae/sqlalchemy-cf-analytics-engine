@@ -10,7 +10,7 @@
 	"data":
 	[
 		{
-			"blob1": "\/api\/items"
+			"blob1": "POST"
 		}
 	],
 

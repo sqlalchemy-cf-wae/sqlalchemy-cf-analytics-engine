@@ -1,21 +1,21 @@
-// Test Worker that writes fake app events to a Workers Analytics Engine
-// dataset, so the driver and dialect have real data to query.
+// Simulates a small e-commerce company ("Northwind Shop") that uses Workers
+// Analytics Engine the way production apps usually do: one dataset for API
+// request telemetry and one for product analytics events. Nothing about the
+// layout is chosen to suit Superset.
 {
   "name": "cfwae-demo",
   "main": "src/index.js",
   "compatibility_date": "2025-11-01",
 
   // Data point timestamps are set by Cloudflare when they are written and
-  // cannot be backdated, so a cron trigger writes a batch every 15 minutes.
-  // That spreads the data over hours and days for time-grain testing.
+  // cannot be backdated, so a cron trigger simulates traffic every 5 minutes.
+  // Volume follows a daily cycle, so the data spreads over hours and days.
   "triggers": {
-    "crons": ["*/15 * * * *"]
+    "crons": ["*/5 * * * *"]
   },
 
   "analytics_engine_datasets": [
-    {
-      "binding": "EVENTS",
-      "dataset": "cfwae_demo"
-    }
+    { "binding": "API_REQUESTS", "dataset": "api_requests" },
+    { "binding": "PRODUCT_EVENTS", "dataset": "product_events" }
   ]
 }

@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 OUT=../../tests/fixtures/responses
 mkdir -p "$OUT"
 
-DS=cfwae_demo
+DS=api_requests
 
 probe() {
   local name=$1 sql=$2
@@ -23,7 +23,7 @@ probe describe_table           "DESCRIBE $DS FORMAT JSON"
 
 # Plain results and type names in "meta"
 probe select_all_columns       "SELECT * FROM $DS ORDER BY timestamp DESC LIMIT 3 FORMAT JSON"
-probe select_zero_rows         "SELECT blob1 FROM $DS WHERE blob1 = 'no-such-path' FORMAT JSON"
+probe select_zero_rows         "SELECT blob1 FROM $DS WHERE blob2 = '/no-such-path' FORMAT JSON"
 probe format_default           "SELECT blob1, double1 FROM $DS LIMIT 2"
 
 # What Superset will generate
@@ -33,7 +33,7 @@ probe to_datetime_filter       "SELECT count() AS n FROM $DS WHERE timestamp >= 
 probe to_date_filter           "SELECT count() AS n FROM $DS WHERE timestamp >= toDate('2026-01-01') FORMAT JSON"
 probe to_datetime_date_only    "SELECT count() AS n FROM $DS WHERE timestamp >= toDateTime('2026-01-01') FORMAT JSON"
 probe now_minus_interval       "SELECT count() AS n FROM $DS WHERE timestamp > NOW() - INTERVAL '1' DAY FORMAT JSON"
-probe like_filter              "SELECT count() AS n FROM $DS WHERE blob5 LIKE 'O%' FORMAT JSON"
+probe like_filter              "SELECT count() AS n FROM $DS WHERE blob7 LIKE 'validation%' FORMAT JSON"
 probe limit_offset             "SELECT blob1, timestamp FROM $DS ORDER BY timestamp LIMIT 2 OFFSET 1 FORMAT JSON"
 probe order_by_unselected      "SELECT blob1 FROM $DS ORDER BY timestamp LIMIT 2 FORMAT JSON"
 probe subquery_alias           "SELECT path FROM (SELECT blob1 AS path FROM $DS) AS virtual_table LIMIT 1 FORMAT JSON"
@@ -42,8 +42,8 @@ probe quoted_identifier        "SELECT \"blob1\" FROM \"$DS\" LIMIT 1 FORMAT JSO
 probe backtick_identifier      "SELECT \`blob1\` FROM \`$DS\` LIMIT 1 FORMAT JSON"
 probe subquery                 "SELECT path, n FROM (SELECT blob1 AS path, SUM(_sample_interval) AS n FROM $DS GROUP BY path) ORDER BY n DESC LIMIT 3 FORMAT JSON"
 probe join                     "SELECT a.blob1 FROM $DS AS a JOIN $DS AS b ON a.blob1 = b.blob1 LIMIT 1 FORMAT JSON"
-probe quoted_value_backslash   "SELECT count() AS n FROM $DS WHERE blob5 = 'O\\'Malley' FORMAT JSON"
-probe quoted_value_doubled     "SELECT count() AS n FROM $DS WHERE blob5 = 'O''Malley' FORMAT JSON"
+probe quoted_value_backslash   "SELECT count() AS n FROM $DS WHERE blob8 LIKE 'Customer \"O\\'Brien%' FORMAT JSON"
+probe quoted_value_doubled     "SELECT count() AS n FROM $DS WHERE blob8 LIKE 'Customer \"O''Brien%' FORMAT JSON"
 probe trailing_semicolon       "SELECT 1 AS one FORMAT JSON;"
 probe leading_comment          "-- tag
 SELECT 1 AS one FORMAT JSON"

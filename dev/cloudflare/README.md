@@ -1,8 +1,20 @@
 # Cloudflare test setup
 
-A small Worker that writes fake app events to the `cfwae_demo` Analytics
-Engine dataset, plus scripts to query the SQL API and save its replies as test
-fixtures. None of this is part of the published package.
+A Worker that simulates traffic for "Northwind Shop", a made-up e-commerce
+company, and writes it to Analytics Engine the way a production app would,
+plus scripts to query the SQL API and save its replies as test fixtures.
+None of this is part of the published package.
+
+The data is deliberately not shaped for Superset: columns are in the order an
+app developer would pick, values are raw (full URLs, user agents, error
+messages), and traffic follows a daily cycle with occasional incidents.
+
+| Dataset | One row per | Columns |
+|---|---|---|
+| `api_requests` | public API call | `index1` account ID; `blob1` method, `blob2` path with IDs and query string, `blob3` country, `blob4` colo, `blob5` user agent, `blob6` API version, `blob7` error code, `blob8` error message; `double1` status, `double2` latency ms, `double3` response bytes, `double4` request bytes, `double5` cache hit |
+| `product_events` | storefront analytics event | `index1` user ID; `blob1` event name, `blob2` session ID, `blob3` page URL, `blob4` referrer, `blob5` device, `blob6` plan, `blob7` SKU, `blob8` search query, `blob9` currency; `double1` value, `double2` quantity, `double3` time on page ms |
+
+The full layout is documented at the top of `src/index.js`.
 
 ## One-time setup (each teammate)
 
@@ -26,17 +38,18 @@ fixtures. None of this is part of the published package.
 cd dev/cloudflare && npx wrangler@4 deploy
 ```
 
-This creates the `cfwae_demo` dataset on the first write. A cron trigger then
-writes 20–60 events every 15 minutes, so hourly and daily charts fill in over
-time. To write a batch straight away, open
-`https://cfwae-demo.<your-subdomain>.workers.dev/seed?n=100`.
+Both datasets are created on the first write. A cron trigger then simulates
+traffic every 5 minutes (busier around 18:00 UTC, quieter on weekends, with an
+occasional burst of 5xx errors), so hourly and daily charts fill in over time.
+Timestamps are set by Cloudflare and can't be backdated. To write a burst
+straight away, open `https://cfwae-demo.<your-subdomain>.workers.dev/seed?n=200`.
 
 New data can take a minute or two to become queryable.
 
 ## Query the SQL API
 
 ```bash
-./query.sh "SELECT blob1, SUM(_sample_interval) AS n FROM cfwae_demo GROUP BY blob1 FORMAT JSON"
+./query.sh "SELECT blob1, SUM(_sample_interval) AS n FROM api_requests GROUP BY blob1 FORMAT JSON"
 ```
 
 ## Record fixtures

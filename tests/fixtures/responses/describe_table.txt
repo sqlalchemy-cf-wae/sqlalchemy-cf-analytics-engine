@@ -1,2 +1,2 @@
-Input was invalid: unsupported SQL statement type: DESCRIBE cfwae_demo
+Input was invalid: unsupported SQL statement type: DESCRIBE api_requests
 HTTP 422

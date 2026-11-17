@@ -1,2 +1,2 @@
-Input was invalid: specifying aliases for FROM subqueries is unsupported: (SELECT blob1 AS path FROM cfwae_demo) AS virtual_table
+Input was invalid: specifying aliases for FROM subqueries is unsupported: (SELECT blob1 AS path FROM api_requests) AS virtual_table
 HTTP 422

@@ -10,13 +10,19 @@
 	"data":
 	[
 		{
+			"dataset": "api_requests"
+		},
+		{
 			"dataset": "cfwae_demo"
+		},
+		{
+			"dataset": "product_events"
 		}
 	],
 
-	"rows": 1,
+	"rows": 3,
 
-	"rows_before_limit_at_least": 94
+	"rows_before_limit_at_least": 711
 }
 
 HTTP 200

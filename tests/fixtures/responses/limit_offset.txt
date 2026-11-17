@@ -14,18 +14,18 @@
 	"data":
 	[
 		{
-			"blob1": "\/cart",
-			"timestamp": "2026-11-17 21:05:44"
+			"blob1": "POST",
+			"timestamp": "2026-11-17 21:24:22"
 		},
 		{
-			"blob1": "\/checkout",
-			"timestamp": "2026-11-17 21:05:44"
+			"blob1": "GET",
+			"timestamp": "2026-11-17 21:24:22"
 		}
 	],
 
 	"rows": 2,
 
-	"rows_before_limit_at_least": 94
+	"rows_before_limit_at_least": 364
 }
 
 HTTP 200
