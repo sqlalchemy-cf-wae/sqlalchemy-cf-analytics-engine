@@ -8,3 +8,5 @@ venv/
 .pytest_cache/
 .coverage
 .env
+.wrangler/
+node_modules/

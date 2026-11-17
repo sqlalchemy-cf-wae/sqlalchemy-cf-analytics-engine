@@ -1,0 +1,21 @@
+// Test Worker that writes fake app events to a Workers Analytics Engine
+// dataset, so the driver and dialect have real data to query.
+{
+  "name": "cfwae-demo",
+  "main": "src/index.js",
+  "compatibility_date": "2025-11-01",
+
+  // Data point timestamps are set by Cloudflare when they are written and
+  // cannot be backdated, so a cron trigger writes a batch every 15 minutes.
+  // That spreads the data over hours and days for time-grain testing.
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  },
+
+  "analytics_engine_datasets": [
+    {
+      "binding": "EVENTS",
+      "dataset": "cfwae_demo"
+    }
+  ]
+}
