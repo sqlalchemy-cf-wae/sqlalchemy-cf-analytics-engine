@@ -18,25 +18,40 @@ The full layout is documented at the top of `src/index.js`.
 
 ## One-time setup (each teammate)
 
+About 10–15 minutes. Everything here works on the free plan.
+
 1. **Cloudflare account.** Sign up at <https://dash.cloudflare.com/sign-up>
-   if you don't have one. The free Workers plan should be enough.
-2. **Log in Wrangler** (opens a browser):
+   if you don't have one.
+2. **Enable Analytics Engine.** It's off by default. In the dashboard go to
+   Storage & databases → Analytics Engine and click **Enable**. Without this,
+   deploying fails with "You need to enable Analytics Engine" and queries
+   return `403 Authorization error`.
+3. **Log in Wrangler** (opens a browser). Logging in to the dashboard is not
+   enough; Wrangler needs its own login:
    ```bash
    cd dev/cloudflare && npx wrangler@4 login
    ```
-3. **API token for queries.** In the dashboard: My Profile → API Tokens →
-   Create Token → Custom token → permission
-   *Account / Account Analytics / Read*. Then:
+4. **API token for queries.** In the dashboard: My Profile → API Tokens →
+   Create Token → Start from scratch → Start with an Account policy →
+   Analytics & Logs → tick *Account Analytics, Read* → Continue to summary →
+   Create Token. Copy it straight away; it's only shown once.
+5. **`.env` file.**
    ```bash
-   cp .env.example .env   # and paste in your account ID and token
+   cp .env.example .env
    ```
-   `.env` is gitignored. Never commit it.
+   Fill in `CFWAE_ACCOUNT_ID` (the 32-character ID in your dashboard URL)
+   and `CFWAE_API_TOKEN`. `.env` is gitignored. Never commit it. The names
+   deliberately don't start with `CF_`/`CLOUDFLARE_`, because Wrangler would
+   pick those up and try to deploy with the read-only token.
 
 ## Deploy the Worker
 
 ```bash
 cd dev/cloudflare && npx wrangler@4 deploy
 ```
+
+On a brand-new account, Wrangler first asks you to choose a `workers.dev`
+subdomain; the Worker's URL ends up as `cfwae-demo.<subdomain>.workers.dev`.
 
 Both datasets are created on the first write. A cron trigger then simulates
 traffic every 5 minutes (busier around 18:00 UTC, quieter on weekends, with an
