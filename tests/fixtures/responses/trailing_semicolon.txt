@@ -1,0 +1,20 @@
+{
+	"meta":
+	[
+		{
+			"name": "one",
+			"type": "UInt8"
+		}
+	],
+
+	"data":
+	[
+		{
+			"one": 1
+		}
+	],
+
+	"rows": 1
+}
+
+HTTP 200

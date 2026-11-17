@@ -1,0 +1,31 @@
+{
+	"meta":
+	[
+		{
+			"name": "blob1",
+			"type": "String"
+		},
+		{
+			"name": "timestamp",
+			"type": "DateTime"
+		}
+	],
+
+	"data":
+	[
+		{
+			"blob1": "\/cart",
+			"timestamp": "2026-11-17 21:05:44"
+		},
+		{
+			"blob1": "\/checkout",
+			"timestamp": "2026-11-17 21:05:44"
+		}
+	],
+
+	"rows": 2,
+
+	"rows_before_limit_at_least": 94
+}
+
+HTTP 200

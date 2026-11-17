@@ -1,0 +1,329 @@
+{
+	"meta":
+	[
+		{
+			"name": "_sample_interval",
+			"type": "UInt32"
+		},
+		{
+			"name": "blob1",
+			"type": "String"
+		},
+		{
+			"name": "blob10",
+			"type": "String"
+		},
+		{
+			"name": "blob11",
+			"type": "String"
+		},
+		{
+			"name": "blob12",
+			"type": "String"
+		},
+		{
+			"name": "blob13",
+			"type": "String"
+		},
+		{
+			"name": "blob14",
+			"type": "String"
+		},
+		{
+			"name": "blob15",
+			"type": "String"
+		},
+		{
+			"name": "blob16",
+			"type": "String"
+		},
+		{
+			"name": "blob17",
+			"type": "String"
+		},
+		{
+			"name": "blob18",
+			"type": "String"
+		},
+		{
+			"name": "blob19",
+			"type": "String"
+		},
+		{
+			"name": "blob2",
+			"type": "String"
+		},
+		{
+			"name": "blob20",
+			"type": "String"
+		},
+		{
+			"name": "blob3",
+			"type": "String"
+		},
+		{
+			"name": "blob4",
+			"type": "String"
+		},
+		{
+			"name": "blob5",
+			"type": "String"
+		},
+		{
+			"name": "blob6",
+			"type": "String"
+		},
+		{
+			"name": "blob7",
+			"type": "String"
+		},
+		{
+			"name": "blob8",
+			"type": "String"
+		},
+		{
+			"name": "blob9",
+			"type": "String"
+		},
+		{
+			"name": "dataset",
+			"type": "String"
+		},
+		{
+			"name": "double1",
+			"type": "Float64"
+		},
+		{
+			"name": "double10",
+			"type": "Float64"
+		},
+		{
+			"name": "double11",
+			"type": "Float64"
+		},
+		{
+			"name": "double12",
+			"type": "Float64"
+		},
+		{
+			"name": "double13",
+			"type": "Float64"
+		},
+		{
+			"name": "double14",
+			"type": "Float64"
+		},
+		{
+			"name": "double15",
+			"type": "Float64"
+		},
+		{
+			"name": "double16",
+			"type": "Float64"
+		},
+		{
+			"name": "double17",
+			"type": "Float64"
+		},
+		{
+			"name": "double18",
+			"type": "Float64"
+		},
+		{
+			"name": "double19",
+			"type": "Float64"
+		},
+		{
+			"name": "double2",
+			"type": "Float64"
+		},
+		{
+			"name": "double20",
+			"type": "Float64"
+		},
+		{
+			"name": "double3",
+			"type": "Float64"
+		},
+		{
+			"name": "double4",
+			"type": "Float64"
+		},
+		{
+			"name": "double5",
+			"type": "Float64"
+		},
+		{
+			"name": "double6",
+			"type": "Float64"
+		},
+		{
+			"name": "double7",
+			"type": "Float64"
+		},
+		{
+			"name": "double8",
+			"type": "Float64"
+		},
+		{
+			"name": "double9",
+			"type": "Float64"
+		},
+		{
+			"name": "index1",
+			"type": "String"
+		},
+		{
+			"name": "timestamp",
+			"type": "DateTime"
+		}
+	],
+
+	"data":
+	[
+		{
+			"_sample_interval": 3,
+			"blob1": "\/cart",
+			"blob10": "",
+			"blob11": "",
+			"blob12": "",
+			"blob13": "",
+			"blob14": "",
+			"blob15": "",
+			"blob16": "",
+			"blob17": "",
+			"blob18": "",
+			"blob19": "",
+			"blob2": "GET",
+			"blob20": "",
+			"blob3": "IN",
+			"blob4": "2xx",
+			"blob5": "Bob",
+			"blob6": "",
+			"blob7": "",
+			"blob8": "",
+			"blob9": "",
+			"dataset": "cfwae_demo",
+			"double1": 435,
+			"double10": 0,
+			"double11": 0,
+			"double12": 0,
+			"double13": 0,
+			"double14": 0,
+			"double15": 0,
+			"double16": 0,
+			"double17": 0,
+			"double18": 0,
+			"double19": 0,
+			"double2": 200,
+			"double20": 0,
+			"double3": 18616,
+			"double4": 0,
+			"double5": 0,
+			"double6": 0,
+			"double7": 0,
+			"double8": 0,
+			"double9": 0,
+			"index1": "\/cart",
+			"timestamp": "2026-11-17 21:05:44"
+		},
+		{
+			"_sample_interval": 1,
+			"blob1": "\/cart",
+			"blob10": "",
+			"blob11": "",
+			"blob12": "",
+			"blob13": "",
+			"blob14": "",
+			"blob15": "",
+			"blob16": "",
+			"blob17": "",
+			"blob18": "",
+			"blob19": "",
+			"blob2": "GET",
+			"blob20": "",
+			"blob3": "DE",
+			"blob4": "2xx",
+			"blob5": "Bob",
+			"blob6": "",
+			"blob7": "",
+			"blob8": "",
+			"blob9": "",
+			"dataset": "cfwae_demo",
+			"double1": 373,
+			"double10": 0,
+			"double11": 0,
+			"double12": 0,
+			"double13": 0,
+			"double14": 0,
+			"double15": 0,
+			"double16": 0,
+			"double17": 0,
+			"double18": 0,
+			"double19": 0,
+			"double2": 200,
+			"double20": 0,
+			"double3": 4026,
+			"double4": 0,
+			"double5": 0,
+			"double6": 0,
+			"double7": 0,
+			"double8": 0,
+			"double9": 0,
+			"index1": "\/cart",
+			"timestamp": "2026-11-17 21:05:44"
+		},
+		{
+			"_sample_interval": 4,
+			"blob1": "\/checkout",
+			"blob10": "",
+			"blob11": "",
+			"blob12": "",
+			"blob13": "",
+			"blob14": "",
+			"blob15": "",
+			"blob16": "",
+			"blob17": "",
+			"blob18": "",
+			"blob19": "",
+			"blob2": "GET",
+			"blob20": "",
+			"blob3": "GB",
+			"blob4": "2xx",
+			"blob5": "Alice",
+			"blob6": "",
+			"blob7": "",
+			"blob8": "",
+			"blob9": "",
+			"dataset": "cfwae_demo",
+			"double1": 281,
+			"double10": 0,
+			"double11": 0,
+			"double12": 0,
+			"double13": 0,
+			"double14": 0,
+			"double15": 0,
+			"double16": 0,
+			"double17": 0,
+			"double18": 0,
+			"double19": 0,
+			"double2": 200,
+			"double20": 0,
+			"double3": 39683,
+			"double4": 0,
+			"double5": 0,
+			"double6": 0,
+			"double7": 0,
+			"double8": 0,
+			"double9": 0,
+			"index1": "\/checkout",
+			"timestamp": "2026-11-17 21:05:44"
+		}
+	],
+
+	"rows": 3,
+
+	"rows_before_limit_at_least": 94
+}
+
+HTTP 200

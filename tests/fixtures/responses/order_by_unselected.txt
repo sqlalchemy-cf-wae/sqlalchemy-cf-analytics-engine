@@ -1,0 +1,2 @@
+Input was invalid: unable to find type of column: "timestamp"
+HTTP 422

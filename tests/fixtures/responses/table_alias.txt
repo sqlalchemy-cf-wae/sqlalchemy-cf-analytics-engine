@@ -1,0 +1,2 @@
+Input was invalid: specifying aliases for FROM tables is unsupported: cfwae_demo AS x
+HTTP 422

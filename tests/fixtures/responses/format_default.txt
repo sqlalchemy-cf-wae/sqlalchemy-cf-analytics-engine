@@ -1,0 +1,31 @@
+{
+	"meta":
+	[
+		{
+			"name": "blob1",
+			"type": "String"
+		},
+		{
+			"name": "double1",
+			"type": "Float64"
+		}
+	],
+
+	"data":
+	[
+		{
+			"blob1": "\/api\/items",
+			"double1": 187
+		},
+		{
+			"blob1": "\/api\/items",
+			"double1": 96
+		}
+	],
+
+	"rows": 2,
+
+	"rows_before_limit_at_least": 0
+}
+
+HTTP 200

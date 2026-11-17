@@ -1,0 +1,22 @@
+{
+	"meta":
+	[
+		{
+			"name": "blob1",
+			"type": "String"
+		}
+	],
+
+	"data":
+	[
+		{
+			"blob1": "\/api\/items"
+		}
+	],
+
+	"rows": 1,
+
+	"rows_before_limit_at_least": 0
+}
+
+HTTP 200

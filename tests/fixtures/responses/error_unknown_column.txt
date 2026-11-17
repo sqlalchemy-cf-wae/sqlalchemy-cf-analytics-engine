@@ -1,0 +1,2 @@
+Input was invalid: cannot select unknown column: "no_such_column"
+HTTP 422

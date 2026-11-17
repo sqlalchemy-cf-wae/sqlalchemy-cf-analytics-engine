@@ -1,0 +1,2 @@
+Input was invalid: sql parser error: Expected an SQL statement, found: SELEC
+HTTP 422

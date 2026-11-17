@@ -1,0 +1,22 @@
+{
+	"meta":
+	[
+		{
+			"name": "dataset",
+			"type": "String"
+		}
+	],
+
+	"data":
+	[
+		{
+			"dataset": "cfwae_demo"
+		}
+	],
+
+	"rows": 1,
+
+	"rows_before_limit_at_least": 94
+}
+
+HTTP 200

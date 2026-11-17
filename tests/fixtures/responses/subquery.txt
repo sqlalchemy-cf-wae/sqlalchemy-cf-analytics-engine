@@ -1,0 +1,35 @@
+{
+	"meta":
+	[
+		{
+			"name": "path",
+			"type": "String"
+		},
+		{
+			"name": "n",
+			"type": "UInt64"
+		}
+	],
+
+	"data":
+	[
+		{
+			"path": "\/checkout",
+			"n": "60"
+		},
+		{
+			"path": "\/api\/search",
+			"n": "56"
+		},
+		{
+			"path": "\/api\/items",
+			"n": "48"
+		}
+	],
+
+	"rows": 3,
+
+	"rows_before_limit_at_least": 6
+}
+
+HTTP 200

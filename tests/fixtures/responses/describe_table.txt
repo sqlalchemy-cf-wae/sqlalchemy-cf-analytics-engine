@@ -1,0 +1,2 @@
+Input was invalid: unsupported SQL statement type: DESCRIBE cfwae_demo
+HTTP 422

@@ -1,0 +1,27 @@
+{
+	"meta":
+	[
+		{
+			"name": "day",
+			"type": "DateTime"
+		},
+		{
+			"name": "requests",
+			"type": "UInt64"
+		}
+	],
+
+	"data":
+	[
+		{
+			"day": "2026-11-17 00:00:00",
+			"requests": "300"
+		}
+	],
+
+	"rows": 1,
+
+	"rows_before_limit_at_least": 94
+}
+
+HTTP 200

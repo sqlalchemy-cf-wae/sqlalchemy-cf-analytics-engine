@@ -1,0 +1,22 @@
+{
+	"meta":
+	[
+		{
+			"name": "n",
+			"type": "UInt64"
+		}
+	],
+
+	"data":
+	[
+		{
+			"n": "94"
+		}
+	],
+
+	"rows": 1,
+
+	"rows_before_limit_at_least": 94
+}
+
+HTTP 200

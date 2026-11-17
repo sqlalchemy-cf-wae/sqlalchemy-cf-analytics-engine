@@ -1,0 +1,2 @@
+Input was invalid: unsupported SQL statement type: INSERT INTO cfwae_demo (blob1) VALUES ('x')
+HTTP 422

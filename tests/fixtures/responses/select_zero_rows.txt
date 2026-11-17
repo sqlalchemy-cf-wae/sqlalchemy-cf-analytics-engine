@@ -1,0 +1,20 @@
+{
+	"meta":
+	[
+		{
+			"name": "blob1",
+			"type": "String"
+		}
+	],
+
+	"data":
+	[
+
+	],
+
+	"rows": 0,
+
+	"rows_before_limit_at_least": 0
+}
+
+HTTP 200
