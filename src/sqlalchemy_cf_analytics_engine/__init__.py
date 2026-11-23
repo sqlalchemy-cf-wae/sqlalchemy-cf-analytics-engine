@@ -1,10 +1,10 @@
 """DBAPI driver and SQLAlchemy dialect for Cloudflare Workers Analytics Engine."""
 
 from sqlalchemy_cf_analytics_engine.dbapi import (
-    apilevel,
-    connect,
     Connection,
     Cursor,
+    apilevel,
+    connect,
     paramstyle,
     threadsafety,
 )
@@ -22,20 +22,20 @@ from sqlalchemy_cf_analytics_engine.exceptions import (
 )
 
 __all__ = [
-    "apilevel",
-    "connect",
     "Connection",
     "Cursor",
-    "DatabaseError",
     "DataError",
+    "DatabaseError",
     "Error",
     "IntegrityError",
     "InterfaceError",
     "InternalError",
     "NotSupportedError",
     "OperationalError",
-    "paramstyle",
     "ProgrammingError",
-    "threadsafety",
     "Warning",
+    "apilevel",
+    "connect",
+    "paramstyle",
+    "threadsafety",
 ]
