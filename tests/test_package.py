@@ -32,7 +32,9 @@ def test_cursor_after_close_is_an_interface_error() -> None:
         connection.cursor()
 
 
-@pytest.mark.parametrize("uri", ["cfwae://account:token@", "cfwae+httpx://account:token@"])
+@pytest.mark.parametrize(
+    "uri", ["cfwae://account:token@", "cfwae+httpx://account:token@"]
+)
 def test_entry_point_registers_dialect(uri: str) -> None:
     """Needs the package installed (``pip install -e .``) for the entry point."""
     engine = create_engine(uri)

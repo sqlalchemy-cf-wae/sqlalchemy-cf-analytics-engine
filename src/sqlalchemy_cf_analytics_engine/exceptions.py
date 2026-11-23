@@ -3,7 +3,7 @@
 # pylint: disable=redefined-builtin
 
 
-class Warning(Exception):  # noqa: A001
+class Warning(Exception):
     """Important warnings, such as data truncation."""
 
 

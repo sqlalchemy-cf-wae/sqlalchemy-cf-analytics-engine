@@ -10,7 +10,8 @@ connection URI, so the token cannot be sent anywhere else.
 
 from __future__ import annotations
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from sqlalchemy_cf_analytics_engine.exceptions import InterfaceError
 
@@ -18,7 +19,9 @@ apilevel = "2.0"
 threadsafety = 1  # threads may share the module, but not connections
 paramstyle = "pyformat"
 
-API_URL = "https://api.cloudflare.com/client/v4/accounts/{account_id}/analytics_engine/sql"
+API_URL = (
+    "https://api.cloudflare.com/client/v4/accounts/{account_id}/analytics_engine/sql"
+)
 
 
 def connect(account_id: str, api_token: str, timeout: float = 30.0) -> Connection:
