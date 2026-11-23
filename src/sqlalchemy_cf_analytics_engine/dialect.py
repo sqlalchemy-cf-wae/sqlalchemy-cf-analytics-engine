@@ -28,7 +28,7 @@ class CloudflareAnalyticsEngineDialect(default.DefaultDialect):
 
     @classmethod
     def import_dbapi(cls) -> ModuleType:
-        from sqlalchemy_cf_analytics_engine import dbapi
+        import sqlalchemy_cf_analytics_engine as dbapi
 
         return dbapi
 

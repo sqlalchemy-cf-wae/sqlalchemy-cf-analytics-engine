@@ -10,10 +10,20 @@ connection URI, so the token cannot be sent anywhere else.
 
 from __future__ import annotations
 
+import re
+import time
 from collections.abc import Sequence
+from datetime import datetime
 from typing import Any
 
-from sqlalchemy_cf_analytics_engine.exceptions import InterfaceError
+import httpx
+
+from sqlalchemy_cf_analytics_engine.exceptions import (
+    InterfaceError,
+    NotSupportedError,
+    OperationalError,
+    ProgrammingError,
+)
 
 apilevel = "2.0"
 threadsafety = 1  # threads may share the module, but not connections
@@ -22,6 +32,8 @@ paramstyle = "pyformat"
 API_URL = (
     "https://api.cloudflare.com/client/v4/accounts/{account_id}/analytics_engine/sql"
 )
+_READ_ONLY_QUERY_PREFIX = re.compile(r"(?:SELECT\b|SHOW\s+TABLES\b)", re.IGNORECASE)
+_FORMAT_JSON_SUFFIX = re.compile(r"\bFORMAT\s+JSON$", re.IGNORECASE)
 
 
 def connect(account_id: str, api_token: str, timeout: float = 30.0) -> Connection:
@@ -75,21 +87,68 @@ class Cursor:
         self._position = 0
 
     def execute(self, operation: str, parameters: Any = None) -> Cursor:
-        """
-        Send ``operation`` to the SQL API and store the result.
-
-        TODO:
-        - refuse anything that is not SELECT, SHOW or WITH (NotSupportedError)
-        - strip a trailing semicolon and append ``FORMAT JSON``
-        - POST to API_URL with ``Authorization: Bearer <api_token>``
-        - 401/403 -> ProgrammingError, 400 -> ProgrammingError with
-          Cloudflare's message, 429/5xx/timeout -> retry with backoff, then
-          OperationalError, invalid JSON -> InterfaceError
-        - build ``description`` from ``meta`` and rows from ``data``,
-          converting types (see types.py)
-        """
+        """Execute one read-only query and buffer its result."""
         self._check_open()
-        raise NotImplementedError
+        self.description = None
+        self._rows = []
+        self._position = 0
+        self.rowcount = -1
+
+        if parameters:
+            raise NotSupportedError("Bound parameters are not supported yet")
+        sql = operation.strip().removesuffix(";").rstrip()
+        if ";" in sql or not _READ_ONLY_QUERY_PREFIX.match(sql):
+            raise NotSupportedError("Expected one SELECT or SHOW TABLES query")
+        if not _FORMAT_JSON_SUFFIX.search(sql):
+            sql += "\nFORMAT JSON"
+
+        connection = self.connection
+        for attempt in range(3):
+            try:
+                response = httpx.post(
+                    API_URL.format(account_id=connection.account_id),
+                    headers={"Authorization": f"Bearer {connection.api_token}"},
+                    content=sql.encode(),
+                    timeout=connection.timeout,
+                )
+            except httpx.TimeoutException as exc:
+                if attempt == 2:
+                    raise OperationalError("Cloudflare query timed out") from exc
+            except httpx.RequestError as exc:
+                raise OperationalError("Cloudflare request failed") from exc
+            else:
+                if response.status_code != 429 and response.status_code < 500:
+                    break
+                if attempt == 2:
+                    raise OperationalError(
+                        f"Cloudflare returned HTTP {response.status_code}"
+                    )
+            time.sleep(0.25 * 2**attempt)
+
+        if not response.is_success:
+            raise ProgrammingError(
+                f"Cloudflare HTTP {response.status_code}: {response.text}"
+            )
+
+        try:
+            result = response.json()
+            meta, data = result["meta"], result["data"]
+            if not isinstance(meta, list) or not isinstance(data, list):
+                raise TypeError("Expected arrays for meta and data")
+            columns = [(column["name"], column["type"]) for column in meta]
+            rows = [
+                tuple(_convert(row[name], type_name) for name, type_name in columns)
+                for row in data
+            ]
+        except (KeyError, TypeError, ValueError) as exc:
+            raise InterfaceError("Invalid Cloudflare SQL response") from exc
+
+        self.description = [
+            (name, kind, None, None, None, None, None) for name, kind in columns
+        ]
+        self._rows = rows
+        self.rowcount = len(rows)
+        return self
 
     def executemany(self, operation: str, seq_of_parameters: Sequence[Any]) -> None:
         raise NotImplementedError("executemany is not supported")
@@ -133,3 +192,15 @@ class Cursor:
         self._check_open()
         if self.description is None:
             raise InterfaceError("No query has been executed")
+
+
+def _convert(value: Any, type_name: str) -> Any:
+    if value is None:
+        return None
+    if type_name == "DateTime":
+        return datetime.fromisoformat(value)
+    if type_name in ("UInt32", "UInt64"):
+        return int(value)
+    if type_name == "Float64":
+        return float(value)
+    return str(value)
