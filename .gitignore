@@ -10,3 +10,4 @@ venv/
 .env
 .wrangler/
 node_modules/
+.ruff_cache/
