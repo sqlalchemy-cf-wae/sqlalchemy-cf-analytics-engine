@@ -32,6 +32,8 @@ paramstyle = "pyformat"
 API_URL = (
     "https://api.cloudflare.com/client/v4/accounts/{account_id}/analytics_engine/sql"
 )
+_READ_ONLY_QUERY_PREFIX = re.compile(r"(?:SELECT\b|SHOW\s+TABLES\b)", re.IGNORECASE)
+_FORMAT_JSON_SUFFIX = re.compile(r"\bFORMAT\s+JSON$", re.IGNORECASE)
 
 
 def connect(account_id: str, api_token: str, timeout: float = 30.0) -> Connection:
@@ -95,11 +97,9 @@ class Cursor:
         if parameters:
             raise NotSupportedError("Bound parameters are not supported yet")
         sql = operation.strip().removesuffix(";").rstrip()
-        if ";" in sql or not re.match(
-            r"(?:SELECT\b|SHOW\s+TABLES\b)", sql, re.IGNORECASE
-        ):
+        if ";" in sql or not _READ_ONLY_QUERY_PREFIX.match(sql):
             raise NotSupportedError("Expected one SELECT or SHOW TABLES query")
-        if not re.search(r"\bFORMAT\s+JSON$", sql, re.IGNORECASE):
+        if not _FORMAT_JSON_SUFFIX.search(sql):
             sql += "\nFORMAT JSON"
 
         connection = self.connection
