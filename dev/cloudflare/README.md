@@ -1,86 +1,110 @@
 # Cloudflare test setup
 
-A Worker that simulates traffic for "Northwind Shop", a made-up e-commerce
-company, and writes it to Analytics Engine the way a production app would,
-plus scripts to query the SQL API and save its replies as test fixtures.
-None of this is part of the published package.
+Use this guide to query live Workers Analytics Engine datasets, generate sample
+data, or record SQL API responses for the test suite. The Python tests use
+recorded responses and run without a Cloudflare account. For local development,
+see [Contributing](../../CONTRIBUTING.md).
 
-The data is deliberately not shaped for Superset: columns are in the order an
-app developer would pick, values are raw (full URLs, user agents, error
-messages), and traffic follows a daily cycle with occasional incidents.
+From the root of your clone, open a terminal and change directories. Run the
+remaining commands from this directory.
 
-| Dataset | One row per | Columns |
-|---|---|---|
-| `api_requests` | public API call | `index1` account ID; `blob1` method, `blob2` path with IDs and query string, `blob3` country, `blob4` colo, `blob5` user agent, `blob6` API version, `blob7` error code, `blob8` error message; `double1` status, `double2` latency ms, `double3` response bytes, `double4` request bytes, `double5` cache hit |
-| `product_events` | storefront analytics event | `index1` user ID; `blob1` event name, `blob2` session ID, `blob3` page URL, `blob4` referrer, `blob5` device, `blob6` plan, `blob7` SKU, `blob8` search query, `blob9` currency; `double1` value, `double2` quantity, `double3` time on page ms |
+```bash
+cd dev/cloudflare
+```
 
-The full layout is documented at the top of `src/index.js`.
+## Configure access to the SQL API
 
-## One-time setup (each teammate)
+1. Sign in to the [Cloudflare dashboard](https://dash.cloudflare.com/) and
+   select the account that owns the datasets. For a new account, open
+   **Storage & databases → Analytics Engine** and select **Enable**.
+2. Under **My Profile → API Tokens**, create a custom token. Select the
+   **Account Analytics** permission with **Read** access for the account.
+   Copy the token when Cloudflare displays it.
+3. Create a local configuration file from the example.
 
-About 10–15 minutes. Everything here works on the free plan.
-
-1. **Cloudflare account.** Sign up at <https://dash.cloudflare.com/sign-up>
-   if you don't have one.
-2. **Enable Analytics Engine.** It's off by default. In the dashboard go to
-   Storage & databases → Analytics Engine and click **Enable**. Without this,
-   deploying fails with "You need to enable Analytics Engine" and queries
-   return `403 Authorization error`.
-3. **Log in Wrangler** (opens a browser). Logging in to the dashboard is not
-   enough; Wrangler needs its own login:
-   ```bash
-   cd dev/cloudflare && npx wrangler@4 login
-   ```
-4. **API token for queries.** In the dashboard: My Profile → API Tokens →
-   Create Token → Start from scratch → Start with an Account policy →
-   Analytics & Logs → tick *Account Analytics, Read* → Continue to summary →
-   Create Token. Copy it straight away; it's only shown once.
-5. **`.env` file.**
    ```bash
    cp .env.example .env
    ```
-   Fill in `CFWAE_ACCOUNT_ID` (the 32-character ID in your dashboard URL)
-   and `CFWAE_API_TOKEN`. `.env` is gitignored. Never commit it. The names
-   deliberately don't start with `CF_`/`CLOUDFLARE_`, because Wrangler would
-   pick those up and try to deploy with the read-only token.
 
-## Deploy the Worker
+   In the dashboard, press **⌘K** (macOS) or **Ctrl+K** (Windows or Linux)
+   to open **Search**. Type **Copy account ID** and select the result.
+   You can also copy the ID under **Workers & Pages → Account Details**.
+
+   In `.env`, set `CFWAE_ACCOUNT_ID` to the copied ID and `CFWAE_API_TOKEN`
+   to the token you created. Git ignores `.env`.
+
+## Query an existing dataset
+
+List the datasets available to your account. The script reads `.env` and
+prints the response body followed by the HTTP status.
 
 ```bash
-cd dev/cloudflare && npx wrangler@4 deploy
+./query.sh "SHOW TABLES FORMAT JSON"
 ```
 
-On a brand-new account, Wrangler first asks you to choose a `workers.dev`
-subdomain; the Worker's URL ends up as `cfwae-demo.<subdomain>.workers.dev`.
-
-Both datasets are created on the first write. A cron trigger then simulates
-traffic every 5 minutes (busier around 18:00 UTC, quieter on weekends, with an
-occasional burst of 5xx errors), so hourly and daily charts fill in over time.
-Timestamps are set by Cloudflare and can't be backdated. To write a burst
-straight away, open `https://cfwae-demo.<your-subdomain>.workers.dev/seed?n=200`.
-
-New data can take a minute or two to become queryable.
-
-## Query the SQL API
+If the list includes `api_requests`, run the following query to count requests
+by HTTP method, weighted by the sampling interval. If you need sample data,
+deploy the Worker using the steps below.
 
 ```bash
 ./query.sh "SELECT blob1, SUM(_sample_interval) AS n FROM api_requests GROUP BY blob1 FORMAT JSON"
 ```
 
-## Record fixtures
+## Deploy the sample Worker
+
+Use this step when you need to populate your own account. The Worker simulates
+traffic for an online store and writes to two datasets every five minutes.
+
+| Dataset | One row represents | Example fields |
+| --- | --- | --- |
+| `api_requests` | An API request | Account ID, HTTP method, path, status, latency |
+| `product_events` | A storefront event | User ID, event name, page URL, SKU, quantity |
+
+See the [Worker source](src/index.js) for the full column mapping and the
+[Wrangler configuration](wrangler.jsonc) for the dataset bindings and schedule.
+
+Wrangler is Cloudflare’s command-line tool for deploying Workers. With Node.js
+and npm installed, run the login command in your terminal. Wrangler opens a
+browser. Approve the authorization request, then return to the terminal.
+
+```bash
+npx wrangler@4 login
+```
+
+Deploy the Worker using the account you configured for the SQL API.
+
+```bash
+npx wrangler@4 deploy
+```
+
+On your first deployment, Wrangler may prompt you to choose a `workers.dev`
+subdomain. To generate data immediately, open the Worker URL printed by Wrangler
+in your browser and append `/seed?n=200` to the URL.
+
+Analytics Engine creates each dataset on its first write. Allow a minute or two
+for new data to become queryable, then run the queries above. Cloudflare assigns
+timestamps at write time, so hourly and daily charts accumulate data as the
+Worker runs.
+
+## Record test fixtures
+
+With `api_requests` populated, run the probe script to refresh the recorded
+responses used in offline tests.
 
 ```bash
 ./probe.sh
 ```
 
-Runs every query the driver, dialect and engine spec rely on (time grains,
-date literals, LIMIT/OFFSET, subqueries, joins, quoting, errors) and saves each
-raw reply to `tests/fixtures/responses/`. Check the files for anything account
-specific before committing them.
+The script overwrites the corresponding files in
+[tests/fixtures/responses](../../tests/fixtures/responses) with the response
+body and HTTP status for each query. Some queries intentionally exercise API
+errors. Review the diff for unexpected responses and account-specific values
+before committing.
 
-## Clean up
+## Remove the sample Worker
 
-The cron trigger keeps writing until the Worker is removed:
+When you finish collecting data, run the following command to remove the
+Worker and stop scheduled writes.
 
 ```bash
 npx wrangler@4 delete
